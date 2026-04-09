@@ -1,0 +1,43 @@
+---
+- name: Default Allow All Outgoing
+  community.general.ufw:
+    direction: outgoing
+    default: allow
+
+- name: Block Outbound SMTP
+  community.general.ufw:
+    rule: deny
+    direction: out
+    port: '25'
+    proto: tcp
+
+- name: Block Outbound SMB/RPC
+  community.general.ufw:
+    rule: deny
+    direction: out
+    port: 135:139
+    proto: "{{ item }}"
+  loop:
+    - tcp
+    - udp
+
+- name: Block Outbound SMB Direct
+  community.general.ufw:
+    rule: deny
+    direction: out
+    port: '445'
+    proto: any
+
+- name: Block Outbound MySQL/PostgreSQL
+  community.general.ufw:
+    rule: deny
+    direction: out
+    port: 3306,5432
+    proto: tcp
+
+- name: Block Outbound Cleartext
+  community.general.ufw:
+    rule: deny
+    direction: out
+    port: 21,23
+    proto: tcp

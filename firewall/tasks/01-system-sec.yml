@@ -1,0 +1,20 @@
+---
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+
+- name: Install and Start Fail2Ban
+  apt: 
+    name: fail2ban
+    state: present
+  notify: start_fail2ban
+
+- name: Enable IP Spoofing Protection
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.rp_filter
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes

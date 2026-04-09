@@ -1,0 +1,46 @@
+{
+    "inbounds": [
+        {
+            "listen": "127.0.0.1",
+            "port": 51820,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "address": "127.0.0.1",
+                "port": 51820,
+                "network": "udp"
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "vless",
+            "settings": {
+                "vnext": [
+                    {
+                        "address": "<VM IP>",
+                        "port": 443,
+                        "users": [
+                            {
+                                "id": "<xray id>",
+                                "encryption": "none",
+                                "flow": "xtls-rprx-vision"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "reality",
+                "realitySettings": {
+                    "serverName": "<www.example.com>",
+                    "fingerprint": "chrome",
+                    "show": false,
+                    "publicKey": "<sray public key>",
+                    "shortId": "<short id>",
+                    "spiderX": ""
+                }
+            }
+        }
+    ]
+}

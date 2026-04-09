@@ -1,0 +1,40 @@
+---
+- name: Enable Kernel IP Forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Change UFW default forward policy to ACCEPT
+  ansible.builtin.lineinfile:
+    path: /etc/default/ufw
+    regexp: '^DEFAULT_FORWARD_POLICY='
+    line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
+
+- name: Allow incoming ARK port
+  community.general.ufw:
+    rule: allow
+    port: '7777'
+    proto: udp
+
+- name: Allow ARK Query Port
+  community.general.ufw:
+    rule: allow
+    port: '27015'
+    proto: udp
+
+- name: Inject Destination NAT rules into UFW
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/before.rules
+    insertbefore: BOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - ARK PORT FORWARDING"
+    block: |
+      *nat
+      :PREROUTING ACCEPT [0:0]
+      # Forward ARK Game Port
+      -A PREROUTING -p udp --dport 7777 -j DNAT --to-destination 10.0.0.2:7777
+      # Forward ARK Query Port
+      -A PREROUTING -p udp --dport 27015 -j DNAT --to-destination 10.0.0.2:27015
+      COMMIT

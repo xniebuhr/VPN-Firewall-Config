@@ -1,0 +1,23 @@
+---
+- name: Default Deny All
+  community.general.ufw:
+    direction: incoming
+    default: deny
+
+- name: Rate Limit & Allow SSH traffic
+  community.general.ufw:
+    rule: limit
+    port: '22'
+    proto: tcp
+
+- name: Allow Xray core traffic
+  community.general.ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Drop incoming ICMP (ping) in UFW before.rules
+  ansible.builtin.replace:
+    path: /etc/ufw/before.rules
+    regexp: '-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT'
+    replace: '-A ufw-before-input -p icmp --icmp-type echo-request -j DROP'

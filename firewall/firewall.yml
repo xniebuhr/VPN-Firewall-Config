@@ -1,0 +1,27 @@
+---
+- name: Configure Segmented EC2 Firewall
+  hosts: my_vpn
+  become: yes
+  tasks:
+    - name: Import System Security Tasks
+      ansible.builtin.import_tasks: tasks/01-system-sec.yml
+
+    - name: Import Ingress Tasks
+      ansible.builtin.import_tasks: tasks/02-ingress.yml
+
+    - name: Import Egress Tasks
+      ansible.builtin.import_tasks: tasks/03-egress.yml
+
+    - name: Import Routing & NAT Tasks
+      ansible.builtin.import_tasks: tasks/04-routing.yml
+      
+    - name: Enable UFW and set boot start
+      community.general.ufw:
+        state: enabled
+
+  handlers:
+    - name: start_fail2ban
+      ansible.builtin.systemd:
+        name: fail2ban
+        state: restarted
+        enabled: yes
