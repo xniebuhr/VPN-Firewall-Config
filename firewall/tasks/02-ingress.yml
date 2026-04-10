@@ -4,9 +4,10 @@
     direction: incoming
     default: deny
 
-- name: Rate Limit & Allow SSH traffic
+- name: Allow SSH only from VPN subnet
   community.general.ufw:
-    rule: limit
+    rule: allow
+    src: '10.0.0.1/24'
     port: '22'
     proto: tcp
 
