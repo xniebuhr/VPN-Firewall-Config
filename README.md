@@ -32,6 +32,3 @@ Because of the many moving parts in the setup located in different places, I str
 - `firewall`
     - Contains the ansible setup, managed by the tasks. The firewall file simply imports the tasks and holds a handler. The inventory file simply points ansible to my VM. You might notice that `inventory.ini` connects to 10.0.0.1, but if you look at the config files you can figure out that this only works when my VPN is connected, so 10.0.0.1 simply points it at the server so I don't try to connect to the server from inside the server and hairpin.
     - `tasks` just holds the relevant firewall rules, organized into sections.
-
-## Prospective
-I plan to add port knocking to this setup, just to avoid those pesky automated scanners. While debugging, I realized there is lots of scanning towards my VM because I open port 443 UDP and TCP to everywhere, so I can connect from anywhere, so port knocking will make it easier to avoid those scans while keeping my setup intact. 
