@@ -33,8 +33,12 @@
     block: |
       *nat
       :PREROUTING ACCEPT [0:0]
+      :POSTROUTING ACCEPT [0:0]
       # Forward ARK Game Port
       -A PREROUTING -p udp --dport 7777 -j DNAT --to-destination 10.0.0.2:7777
       # Forward ARK Query Port
       -A PREROUTING -p udp --dport 27015 -j DNAT --to-destination 10.0.0.2:27015
+      # Force the return traffic back through the tunnel
+      -A POSTROUTING -d 10.0.0.2 -p udp --dport 7777 -j MASQUERADE
+      -A POSTROUTING -d 10.0.0.2 -p udp --dport 27015 -j MASQUERADE
       COMMIT
